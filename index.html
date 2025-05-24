@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Sementes de Trigo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f4f8;
+        }
+
+        .page {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .input-field {
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .input-field:focus {
+            border-color: #4f7942;
+            box-shadow: 0 0 0 3px rgba(79, 121, 66, 0.2);
+        }
+
+        .btn {
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="bg-gradient-to-r from-green-700 to-green-600 text-white p-4 shadow-md">
+            <div class="container mx-auto flex justify-between items-center">
+                <h1 class="text-2xl font-bold">SementeCalc</h1>
+                <button id="configBtn" class="p-2 rounded-full hover:bg-green-800 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-grow container mx-auto p-4 relative overflow-hidden">
+            <!-- Calculator Page -->
+            <div id="calculatorPage" class="page absolute w-full transition-transform">
+                <div class="bg-white rounded-xl shadow-lg p-6 max-w-md mx-auto mt-8">
+                    <div class="flex items-center mb-6">
+                        <div class="bg-green-100 p-3 rounded-full mr-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                            </svg>
+                        </div>
+                        <h2 class="text-2xl font-semibold text-gray-800">Calculadora de Sementes</h2>
+                    </div>
+
+                    <div class="mb-6">
+                        <label for="areaInput" class="block text-sm font-medium text-gray-700 mb-1">Área em
+                            hectares:</label>
+                        <div class="relative">
+                            <input type="number" id="areaInput"
+                                class="input-field w-full p-3 bg-gray-50 rounded-lg outline-none"
+                                placeholder="Digite a área">
+                            <span class="absolute right-3 top-3 text-gray-500">ha</span>
+                        </div>
+                    </div>
+
+                    <button id="calculateBtn"
+                        class="btn w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg shadow-md">
+                        Calcular
+                    </button>
+
+                    <div id="resultContainer" class="mt-6 p-4 bg-green-50 rounded-lg border border-green-100 hidden">
+                        <h3 class="text-lg font-medium text-gray-800 mb-2">Resultado:</h3>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Quantidade de sementes:</span>
+                            <span id="seedResult" class="text-xl font-bold text-green-700">0 kg</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 max-w-md mx-auto bg-white rounded-xl shadow-lg p-6">
+                    <h3 class="text-lg font-medium text-gray-800 mb-4">Histórico de Cálculos</h3>
+                    <div id="historyList" class="space-y-3">
+                        <p class="text-gray-500 text-center py-4">Nenhum cálculo realizado</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Page -->
+            <div id="settingsPage" class="page absolute w-full transition-transform translate-x-full">
+                <div class="bg-white rounded-xl shadow-lg p-6 max-w-md mx-auto mt-8">
+                    <div class="flex items-center mb-6">
+                        <button id="backBtn" class="mr-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+                        <h2 class="text-2xl font-semibold text-gray-800">Configurações</h2>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div>
+                            <label for="seedRate" class="block text-sm font-medium text-gray-700 mb-1">Taxa de semeadura
+                                (kg/ha):</label>
+                            <input type="number" id="seedRate"
+                                class="input-field w-full p-3 bg-gray-50 rounded-lg outline-none" placeholder="Ex: 150">
+                        </div>
+
+                        <div>
+                            <label for="adjustmentFactor" class="block text-sm font-medium text-gray-700 mb-1">Fator de
+                                ajuste (%):</label>
+                            <input type="number" id="adjustmentFactor"
+                                class="input-field w-full p-3 bg-gray-50 rounded-lg outline-none" placeholder="Ex: 10">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Qualidade da semente:</label>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button class="seed-quality-btn p-2 border rounded-lg text-center"
+                                    data-value="0.9">Baixa</button>
+                                <button
+                                    class="seed-quality-btn p-2 border rounded-lg text-center bg-green-100 border-green-500"
+                                    data-value="1.0">Média</button>
+                                <button class="seed-quality-btn p-2 border rounded-lg text-center"
+                                    data-value="1.1">Alta</button>
+                            </div>
+                        </div>
+
+                        <button id="saveSettingsBtn"
+                            class="btn w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg shadow-md">
+                            Salvar Configurações
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-gray-50 border-t border-gray-200 py-4">
+            <div class="container mx-auto text-center text-gray-500 text-sm">
+                SementeCalc &copy; 2023 - Calculadora de Sementes de Trigo
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Default settings
+        let settings = {
+            seedRate: 150, // kg por hectare
+            adjustmentFactor: 10, // percentual de ajuste
+            seedQuality: 1.0 // fator de qualidade (1.0 = média)
+        };
+
+        // Load settings from localStorage
+        function loadSettings() {
+            const savedSettings = localStorage.getItem('seedCalcSettings');
+            if (savedSettings) {
+                settings = JSON.parse(savedSettings);
+
+                // Update UI with saved settings
+                document.getElementById('seedRate').value = settings.seedRate;
+                document.getElementById('adjustmentFactor').value = settings.adjustmentFactor;
+
+                // Update seed quality buttons
+                document.querySelectorAll('.seed-quality-btn').forEach(btn => {
+                    if (parseFloat(btn.dataset.value) === settings.seedQuality) {
+                        btn.classList.add('bg-green-100', 'border-green-500');
+                    } else {
+                        btn.classList.remove('bg-green-100', 'border-green-500');
+                    }
+                });
+            }
+        }
+
+        // Save settings to localStorage
+        function saveSettings() {
+            settings.seedRate = parseFloat(document.getElementById('seedRate').value) || 150;
+            settings.adjustmentFactor = parseFloat(document.getElementById('adjustmentFactor').value) || 10;
+
+            localStorage.setItem('seedCalcSettings', JSON.stringify(settings));
+
+            // Show success message
+            showToast('Configurações salvas com sucesso!');
+
+            // Navigate back to calculator
+            showCalculatorPage();
+        }
+
+        // Calculate seed amount
+        function calculateSeeds() {
+            const area = parseFloat(document.getElementById('areaInput').value);
+
+            if (!area || isNaN(area)) {
+                showToast('Por favor, insira uma área válida', 'error');
+                return;
+            }
+
+            // Calculate based on formula: area * seedRate * (1 + adjustmentFactor/100) * seedQuality
+            const adjustmentMultiplier = 1 + (settings.adjustmentFactor / 100);
+            const seedAmount = area * settings.seedRate * adjustmentMultiplier * settings.seedQuality;
+
+            // Display result
+            document.getElementById('seedResult').textContent = `${seedAmount.toFixed(2)} kg`;
+            document.getElementById('resultContainer').classList.remove('hidden');
+
+            // Add to history
+            addToHistory(area, seedAmount);
+        }
+
+        // Add calculation to history
+        function addToHistory(area, seedAmount) {
+            const historyList = document.getElementById('historyList');
+
+            // Clear "no calculations" message if it exists
+            if (historyList.querySelector('p')) {
+                historyList.innerHTML = '';
+            }
+
+            // Create history item
+            const historyItem = document.createElement('div');
+            historyItem.className = 'flex justify-between items-center p-3 bg-gray-50 rounded-lg';
+            historyItem.innerHTML = `
+                <div>
+                    <span class="text-sm text-gray-500">Área:</span>
+                    <span class="font-medium ml-1">${area} ha</span>
+                </div>
+                <div>
+                    <span class="text-green-700 font-medium">${seedAmount.toFixed(2)} kg</span>
+                </div>
+            `;
+
+            // Add to history list
+            historyList.prepend(historyItem);
+
+            // Save history to localStorage
+            saveHistory();
+        }
+
+        // Save history to localStorage
+        function saveHistory() {
+            const historyItems = document.getElementById('historyList').innerHTML;
+            localStorage.setItem('seedCalcHistory', historyItems);
+        }
+
+        // Load history from localStorage
+        function loadHistory() {
+            const savedHistory = localStorage.getItem('seedCalcHistory');
+            if (savedHistory) {
+                document.getElementById('historyList').innerHTML = savedHistory;
+            }
+        }
+
+        // Show toast message
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `fixed bottom-4 left-1/2 transform -translate-x-1/2 px-4 py-2 rounded-lg shadow-lg text-white ${type === 'success' ? 'bg-green-600' : 'bg-red-600'
+                }`;
+            toast.textContent = message;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'transition-opacity');
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+
+        // Navigation functions
+        function showSettingsPage() {
+            document.getElementById('calculatorPage').style.transform = 'translateX(-100%)';
+            document.getElementById('settingsPage').style.transform = 'translateX(0)';
+        }
+
+        function showCalculatorPage() {
+            document.getElementById('calculatorPage').style.transform = 'translateX(0)';
+            document.getElementById('settingsPage').style.transform = 'translateX(100%)';
+        }
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load saved data
+            loadSettings();
+            loadHistory();
+
+            // Set up event listeners
+            document.getElementById('configBtn').addEventListener('click', showSettingsPage);
+            document.getElementById('backBtn').addEventListener('click', showCalculatorPage);
+            document.getElementById('calculateBtn').addEventListener('click', calculateSeeds);
+            document.getElementById('saveSettingsBtn').addEventListener('click', saveSettings);
+
+            // Seed quality buttons
+            document.querySelectorAll('.seed-quality-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Remove active class from all buttons
+                    document.querySelectorAll('.seed-quality-btn').forEach(b => {
+                        b.classList.remove('bg-green-100', 'border-green-500');
+                    });
+
+                    // Add active class to clicked button
+                    btn.classList.add('bg-green-100', 'border-green-500');
+
+                    // Update settings
+                    settings.seedQuality = parseFloat(btn.dataset.value);
+                });
+            });
+        });
+    </script>
+    <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'94364e75d43fa672',t:'MTc0Nzg1MzkxOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
+</body>
+
+</html>
